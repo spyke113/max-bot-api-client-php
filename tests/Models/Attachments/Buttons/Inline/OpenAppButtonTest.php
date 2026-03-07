@@ -16,11 +16,12 @@ final class OpenAppButtonTest extends TestCase
     #[Test]
     public function toArraySerializesCorrectly(): void
     {
-        $button = new OpenAppButton('Test Button', 'MyWebApp', 123);
+        $button = new OpenAppButton('Test Button', 'MyWebApp', 123, 'somePayload');
 
         $expectedArray = [
             'web_app' => 'MyWebApp',
             'contact_id' => 123,
+            'payload' => 'somePayload',
             'type' => InlineButtonType::OpenApp->value,
             'text' => 'Test Button',
         ];
@@ -38,6 +39,7 @@ final class OpenAppButtonTest extends TestCase
             'text' => 'Launch',
             'web_app' => 'SomeApp',
             'contact_id' => 456,
+            'payload' => 'somePayload'
         ];
 
         $button = OpenAppButton::fromArray($data);
@@ -47,5 +49,6 @@ final class OpenAppButtonTest extends TestCase
         $this->assertSame('Launch', $button->text);
         $this->assertSame('SomeApp', $button->webApp);
         $this->assertSame(456, $button->contactId);
+        $this->assertSame('somePayload', $button->payload);
     }
 }
