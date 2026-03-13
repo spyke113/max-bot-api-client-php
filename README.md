@@ -103,7 +103,7 @@ $dispatcher->addHandler(UpdateType::BotStarted, function (BotStartedUpdate $upda
 
 ```php
 $api->subscribe(
-    url: 'https://example.com/webhook', // URL на который будут приходить хуки
+    url: 'https://example.com/webhook', // HTTPS URL на который будут приходить хуки
     secret: 'super_secret',             // Секретная фраза для проверки хуков
     updateTypes: [
         // Типы хуков которые вы хотите получать (либо ничего не указывать, чтобы получать все)
