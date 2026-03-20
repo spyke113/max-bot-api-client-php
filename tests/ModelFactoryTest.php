@@ -26,7 +26,6 @@ use BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads\PhotoAttachmentPayl
 use BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads\PhotoAttachmentRequestPayload;
 use BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads\ShareAttachmentRequestPayload;
 use BushlanovDev\MaxMessengerBot\Models\Attachments\PhotoAttachment;
-use BushlanovDev\MaxMessengerBot\Models\Attachments\ReplyKeyboardAttachment;
 use BushlanovDev\MaxMessengerBot\Models\Attachments\ShareAttachment;
 use BushlanovDev\MaxMessengerBot\Models\BotCommand;
 use BushlanovDev\MaxMessengerBot\Models\BotInfo;
@@ -96,7 +95,6 @@ use Psr\Log\LoggerInterface;
 #[UsesClass(AbstractReplyButton::class)]
 #[UsesClass(SendContactButton::class)]
 #[UsesClass(SendMessageButton::class)]
-#[UsesClass(ReplyKeyboardAttachment::class)]
 #[UsesClass(AbstractInlineButton::class)]
 #[UsesClass(ChatButton::class)]
 #[UsesClass(RequestContactButton::class)]
@@ -663,26 +661,6 @@ final class ModelFactoryTest extends TestCase
         $this->expectExceptionMessage('Unknown or unsupported markup type: brand_new_unsupported_type');
 
         $this->factory->createMarkupElement(['type' => 'brand_new_unsupported_type']);
-    }
-
-    #[Test]
-    public function createAttachmentCorrectlyHydratesReplyKeyboard(): void
-    {
-        $data = [
-            'type' => 'reply_keyboard',
-            'buttons' => [
-                [['type' => 'message', 'text' => 'Hello']],
-                [['type' => 'user_contact', 'text' => 'My Contact']]
-            ]
-        ];
-
-        $attachment = $this->factory->createAttachment($data);
-
-        $this->assertInstanceOf(ReplyKeyboardAttachment::class, $attachment);
-        $this->assertCount(2, $attachment->buttons);
-        $this->assertInstanceOf(SendMessageButton::class, $attachment->buttons[0][0]);
-        $this->assertInstanceOf(SendContactButton::class, $attachment->buttons[1][0]);
-        $this->assertSame('My Contact', $attachment->buttons[1][0]->text);
     }
 
     #[Test]
