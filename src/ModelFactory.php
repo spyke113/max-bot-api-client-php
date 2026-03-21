@@ -24,7 +24,6 @@ use BushlanovDev\MaxMessengerBot\Models\Attachments\Buttons\Reply\SendContactBut
 use BushlanovDev\MaxMessengerBot\Models\Attachments\Buttons\Reply\SendGeoLocationButton;
 use BushlanovDev\MaxMessengerBot\Models\Attachments\Buttons\Reply\SendMessageButton;
 use BushlanovDev\MaxMessengerBot\Models\Attachments\ContactAttachment;
-use BushlanovDev\MaxMessengerBot\Models\Attachments\DataAttachment;
 use BushlanovDev\MaxMessengerBot\Models\Attachments\FileAttachment;
 use BushlanovDev\MaxMessengerBot\Models\Attachments\InlineKeyboardAttachment;
 use BushlanovDev\MaxMessengerBot\Models\Attachments\LocationAttachment;
@@ -259,7 +258,6 @@ readonly class ModelFactory
             AttachmentType::InlineKeyboard => InlineKeyboardAttachment::fromArray($data),
             AttachmentType::Location => LocationAttachment::fromArray($data),
             AttachmentType::Share => ShareAttachment::fromArray($data),
-            AttachmentType::Data => DataAttachment::fromArray($data),
             default => throw new LogicException('Unknown or unsupported attachment type: ' . ($data['type'] ?? 'none')),
         };
     }

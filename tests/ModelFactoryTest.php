@@ -18,7 +18,6 @@ use BushlanovDev\MaxMessengerBot\Models\Attachments\Buttons\Inline\RequestGeoLoc
 use BushlanovDev\MaxMessengerBot\Models\Attachments\Buttons\Reply\AbstractReplyButton;
 use BushlanovDev\MaxMessengerBot\Models\Attachments\Buttons\Reply\SendContactButton;
 use BushlanovDev\MaxMessengerBot\Models\Attachments\Buttons\Reply\SendMessageButton;
-use BushlanovDev\MaxMessengerBot\Models\Attachments\DataAttachment;
 use BushlanovDev\MaxMessengerBot\Models\Attachments\InlineKeyboardAttachment;
 use BushlanovDev\MaxMessengerBot\Models\Attachments\LocationAttachment;
 use BushlanovDev\MaxMessengerBot\Models\Attachments\Payloads\KeyboardPayload;
@@ -84,7 +83,6 @@ use Psr\Log\LoggerInterface;
 #[UsesClass(PhotoAttachmentRequestPayload::class)]
 #[UsesClass(VideoUrls::class)]
 #[UsesClass(AbstractAttachment::class)]
-#[UsesClass(DataAttachment::class)]
 #[UsesClass(ShareAttachment::class)]
 #[UsesClass(ShareAttachmentRequestPayload::class)]
 #[UsesClass(LinkMarkup::class)]
@@ -591,7 +589,6 @@ final class ModelFactoryTest extends TestCase
                 'seq' => 102,
                 'text' => 'Message with data attachment',
                 'attachments' => [
-                    ['type' => 'data', 'data' => 'payload_from_reply_button'],
                     [
                         'type' => 'share',
                         'payload' => ['url' => 'http://a.com'],
@@ -613,16 +610,13 @@ final class ModelFactoryTest extends TestCase
         $this->assertInstanceOf(Message::class, $message);
         $this->assertInstanceOf(MessageBody::class, $message->body);
         $this->assertIsArray($attachments);
-        $this->assertCount(3, $attachments);
+        $this->assertCount(2, $attachments);
 
-        $this->assertInstanceOf(DataAttachment::class, $attachments[0]);
-        $this->assertSame('payload_from_reply_button', $attachments[0]->data);
+        $this->assertInstanceOf(ShareAttachment::class, $message->body->attachments[0]);
+        $this->assertSame('Test Share', $attachments[0]->title);
 
-        $this->assertInstanceOf(ShareAttachment::class, $message->body->attachments[1]);
-        $this->assertSame('Test Share', $attachments[1]->title);
-
-        $this->assertInstanceOf(PhotoAttachment::class, $attachments[2]);
-        $this->assertSame(1, $attachments[2]->payload->photoId);
+        $this->assertInstanceOf(PhotoAttachment::class, $attachments[1]);
+        $this->assertSame(1, $attachments[1]->payload->photoId);
     }
 
     #[Test]
@@ -747,14 +741,6 @@ final class ModelFactoryTest extends TestCase
     public static function attachmentTypeProvider(): array
     {
         return [
-            'Data Attachment' => [
-                ['type' => 'data', 'data' => 'test_payload'],
-                DataAttachment::class,
-                function (TestCase $test, DataAttachment $attachment) {
-                    $test->assertSame('test_payload', $attachment->data);
-                }
-            ],
-
             'Location Attachment' => [
                 ['type' => 'location', 'latitude' => 55.751244, 'longitude' => 37.618423],
                 LocationAttachment::class,

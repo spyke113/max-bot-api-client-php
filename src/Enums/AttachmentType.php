@@ -15,5 +15,4 @@ enum AttachmentType: string
     case InlineKeyboard = 'inline_keyboard';
     case Location = 'location';
     case Share = 'share';
-    case Data = 'data';
 }
